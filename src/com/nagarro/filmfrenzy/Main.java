@@ -102,7 +102,7 @@ public class Main {
             Map<Integer, Character> movieBlankData = replaceAndMap(movie.movieName, movie);
             currentBlankIndex = min(movieBlankData.keySet());
             do {
-                System.out.println(colors.get("yellow") + "Player " + (isPlayer1Turn ? "1" : "2") + " turn" + colors.get("reset"));
+                System.out.println(colors.get("yellow") + (isPlayer1Turn ? player1.name : player2.name) + "'s turn" + colors.get("reset"));
                 System.out.println(colors.get("cyan") + "-----------------");
                 System.out.println("Chances left: " + gameLifes.chances);
                 System.out.println("Lifes left: " + gameLifes.lifes + colors.get("reset"));
@@ -214,8 +214,8 @@ public class Main {
             System.out.println(colors.get("red") + "Unexpected Error Occurred, Restart the game" + colors.get("reset"));
         }
         System.out.println(colors.get("blue") + "======== GAME OVER!! ========");
-        System.out.println("Player 1 score: " + player1.score);
-        System.out.println("Player 2 score: " + player2.score);
+        System.out.println(player1.name + "'s score: " + player1.score);
+        System.out.println(player2.name + "'s score: " + player2.score);
         System.out.println("=============================" + colors.get("reset"));
     }
 }
