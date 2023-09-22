@@ -85,7 +85,8 @@ public class Main {
             player1.name = sc.next();
             System.out.print("Enter Player 2 name: ");
             player2.name = sc.next();
-            System.out.println("Let's start the game " + player1.name + " and " + player2.name);
+            System.out.println( "WELCOME " + player1.name + " and " + player2.name);
+            System.out.println("LET'S START THE GAME!!!"); 
             System.out.println("=============================");
             Movie movie = new Movie();
             movie.movieName = movies.get(randomIndex(movies.size()));
@@ -94,7 +95,8 @@ public class Main {
             do {
                 System.out.println("Player " + (isPlayer1Turn ? "1" : "2") + " turn");
                 System.out.println("-----------------");
-                System.out.println("Chances left: " + gameLifes.chances + " and Lifes: " + gameLifes.lifes);
+                System.out.println("Chances left: " + gameLifes.chances");
+                System.out.println("Lifes left: " + gameLifes.lifes);
                 System.out.println("Guess the movie: " + movie.movieNameWithBlanks);
                 System.out.println("-----------------");
                 System.out.println("Type 'life' to use Life Line");
@@ -102,7 +104,7 @@ public class Main {
                 String guessedChar = sc.next();
                 if (guessedChar.equalsIgnoreCase("life")) {
                     if (gameLifes.lifes < 0) {
-                        System.out.println("No Life Available");
+                        System.out.println("Sorry, No Life Available");
                     } else {
                         String optionsAvailable = "";
                         List<String> availableOptions = gameLifes.optionWithLife.keySet().stream().toList();
@@ -178,14 +180,22 @@ public class Main {
                     if (movieBlankData.get(currentBlankIndex).toString().equalsIgnoreCase(guessedChar)) {
                         fillBlank(currentBlankIndex, movieBlankData.get(currentBlankIndex), movie);
                         if (isPlayer1Turn) {
+                            System.out.println("RIGHT ANSWER!!!");
                             player1.score++;
+                            System.out.println("SCORE: ", player1.score);
+                            System.out.println("---------------------");
                         } else {
+                            System.out.println("RIGHT ANSWER!!!");
                             player2.score++;
+                            System.out.println("SCORE: ", player2.score);
+                            System.out.println("---------------------");
                         }
                         movieBlankData.remove(currentBlankIndex);
                         currentBlankIndex = movieBlankData.isEmpty() ? -1 : min(movieBlankData.keySet());
                     } else {
+                        System.out.println("OOPS!!! WRONG ANSWER");
                         gameLifes.chances--;
+                        System.out.println("LIFES LEFT: ", gameLifes.chances);
                     }
                     isPlayer1Turn = !isPlayer1Turn;
                 }else{
@@ -198,7 +208,7 @@ public class Main {
             System.out.println("Unexpected Error Occurred, Restart the game");
         }
         System.out.println("---------------------");
-        System.out.println("Game over");
+        System.out.println("GAME OVER!!!");
         System.out.println("---------------------");
         System.out.println("Player 1 score: " + player1.score);
         System.out.println("Player 2 score: " + player2.score);
