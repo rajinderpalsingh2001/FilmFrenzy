@@ -10,6 +10,15 @@ import java.util.concurrent.CompletableFuture;
 import static java.util.Collections.min;
 public class Main {
     private static String filePath = "src/com/nagarro/filmfrenzy/resources/movies.txt";
+    private static Random random = new Random();
+    public static Map<String, String> colors = new HashMap<>() {{
+        put("reset", "\u001B[0m");
+        put("red", "\u001B[31m");
+        put("yellow", "\u001B[33m");
+        put("cyan", "\u001B[36m");
+        put("green", "\u001B[32m");
+        put("blue","\u001B[34m");
+    }};
     public static int randomIndex(int len) {
         return (int) (Math.random() * ((len - 1) + 1));
     }
@@ -27,7 +36,6 @@ public class Main {
         }
     }
     public static Map<Integer, Character> replaceAndMap(String movieName, Movie mov) {
-        Random random = new Random();
         StringBuilder maskedName = new StringBuilder();
         Map<Integer, Character> replacementMap = new HashMap<>();
         for (int i = 0; i < movieName.length(); i++) {
@@ -46,13 +54,13 @@ public class Main {
         mov.movieNameWithBlanks = maskedName.toString();
         return replacementMap;
     }
-    public static void fillBlank(int index, Character character, Movie mov) { mov.movieNameWithBlanks = mov.movieNameWithBlanks.substring(0, index) + character.toString().toUpperCase() + mov.movieNameWithBlanks.substring(index + 1); }
+    public static void fillBlank(int index, Character character, Movie mov) {
+        mov.movieNameWithBlanks = mov.movieNameWithBlanks.substring(0, index) + character.toString().toUpperCase() + mov.movieNameWithBlanks.substring(index + 1);
+    }
     private static char getRandomChar() {
-        Random random = new Random();
         return (char) ('A' + random.nextInt('Z' - 'A' + 1));
     }
     private static void shuffleList(List<Character> list) {
-        Random random = new Random();
         for (int i = list.size() - 1; i > 0; i--) {
             int j = random.nextInt(i + 1);
             char temp = list.get(i);
@@ -81,30 +89,31 @@ public class Main {
         Scanner sc = new Scanner(System.in);
         try {
             List<String> movies = readMovies();
-            System.out.print("Enter Player 1 name: ");
+            System.out.print(colors.get("yellow") + "Enter Player 1 name: ");
             player1.name = sc.next();
-            System.out.print("Enter Player 2 name: ");
+            System.out.print("Enter Player 2 name: " + colors.get("reset"));
             player2.name = sc.next();
-            System.out.println( "WELCOME " + player1.name + " and " + player2.name);
-            System.out.println("LET'S START THE GAME!!!"); 
-            System.out.println("=============================");
+            System.out.println("WELCOME " + player1.name + " and " + player2.name);
+            System.out.println(colors.get("blue") + "=============================");
+            System.out.println("LET'S START THE GAME!!!");
+            System.out.println("=============================" + colors.get("reset"));
             Movie movie = new Movie();
             movie.movieName = movies.get(randomIndex(movies.size()));
             Map<Integer, Character> movieBlankData = replaceAndMap(movie.movieName, movie);
             currentBlankIndex = min(movieBlankData.keySet());
             do {
-                System.out.println("Player " + (isPlayer1Turn ? "1" : "2") + " turn");
-                System.out.println("-----------------");
-                System.out.println("Chances left: " + gameLifes.chances");
-                System.out.println("Lifes left: " + gameLifes.lifes);
+                System.out.println(colors.get("yellow") + "Player " + (isPlayer1Turn ? "1" : "2") + " turn" + colors.get("reset"));
+                System.out.println(colors.get("cyan") + "-----------------");
+                System.out.println("Chances left: " + gameLifes.chances);
+                System.out.println("Lifes left: " + gameLifes.lifes + colors.get("reset"));
                 System.out.println("Guess the movie: " + movie.movieNameWithBlanks);
-                System.out.println("-----------------");
-                System.out.println("Type 'life' to use Life Line");
-                System.out.print("Enter a Character for first _ blank: ");
+                System.out.println(colors.get("cyan") + "-----------------");
+                System.out.println("Type 'life' to use Life Line" + colors.get("reset"));
+                System.out.print(colors.get("yellow") + "Enter a Character for first _ blank: " + colors.get("reset"));
                 String guessedChar = sc.next();
                 if (guessedChar.equalsIgnoreCase("life")) {
                     if (gameLifes.lifes < 0) {
-                        System.out.println("Sorry, No Life Available");
+                        System.out.println(colors.get("red") + "Sorry, No Life Available" + colors.get("reset"));
                     } else {
                         String optionsAvailable = "";
                         List<String> availableOptions = gameLifes.optionWithLife.keySet().stream().toList();
@@ -121,10 +130,10 @@ public class Main {
                             }
                         }
                         optionsAvailable += " [-1 to SKIP]: ";
-                        System.out.print("Enter: " + optionsAvailable);
+                        System.out.print(colors.get("yellow") + "Enter: " + optionsAvailable + colors.get("reset"));
                         int option = sc.nextInt();
                         if (gameLifes.usedOptions.contains(option)) {
-                            System.out.println("Can't use this option, life already taken");
+                            System.out.println(colors.get("red") + "Can't use this option, life already taken" + colors.get("reset"));
                         } else {
                             switch (option) {
                                 case 1:
@@ -137,20 +146,20 @@ public class Main {
                                                     int startIndex = contentIndex + "\"content\":".length() + 2;
                                                     response = response.substring(startIndex);
                                                     int endIndex = response.indexOf("\"\n");
-                                                    String content = response.substring(0,endIndex);
-                                                    System.out.println("================================");
+                                                    String content = response.substring(0, endIndex);
+                                                    System.out.println(colors.get("green") + "================================");
                                                     System.out.println("Movie Description: ");
-                                                    System.out.println(content.replaceAll(movie.movieName ,"_"));
-                                                    System.out.println("================================");
+                                                    System.out.println(content.replaceAll(movie.movieName, "_"));
+                                                    System.out.println("================================" + colors.get("reset"));
                                                     gameLifes.lifes -= 2;
-                                                }else{
-                                                    System.out.println("Unable to find Movie Description");
+                                                } else {
+                                                    System.out.println(colors.get("red") + "Unable to find Movie Description" + colors.get("reset"));
                                                 }
                                             })
                                             .join();
                                     break;
                                 case 2:
-                                    System.out.println("One Blank Filled [1 life used]");
+                                    System.out.println(colors.get("cyan") + "One Blank Filled [1 life used]" + colors.get("reset"));
                                     fillBlank(currentBlankIndex, movieBlankData.get(currentBlankIndex), movie);
                                     movieBlankData.remove(currentBlankIndex);
                                     currentBlankIndex = movieBlankData.isEmpty() ? -1 : min(movieBlankData.keySet());
@@ -164,55 +173,50 @@ public class Main {
                                     break;
                                 case 3:
                                     List<Character> hints = showHint(movieBlankData.get(currentBlankIndex));
-                                    System.out.println("Hints: " + hints);
+                                    System.out.println(colors.get("green") + "Hints: " + hints + colors.get("reset"));
                                     gameLifes.lifes--;
                                     break;
                                 case -1:
                                     continue;
                                 default:
-                                    System.out.println("Not a valid option");
+                                    System.out.println(colors.get("red") + "Not a valid option" + colors.get("reset"));
                                     break;
                             }
                             gameLifes.usedOptions.add(option);
                         }
                     }
-                } else if(guessedChar.length()==1) {
+                } else if (guessedChar.length() == 1) {
                     if (movieBlankData.get(currentBlankIndex).toString().equalsIgnoreCase(guessedChar)) {
                         fillBlank(currentBlankIndex, movieBlankData.get(currentBlankIndex), movie);
+                        System.out.println(colors.get("green") + "RIGHT ANSWER!!!");
                         if (isPlayer1Turn) {
-                            System.out.println("RIGHT ANSWER!!!");
                             player1.score++;
-                            System.out.println("SCORE: ", player1.score);
-                            System.out.println("---------------------");
+                            System.out.println("SCORE: " + player1.score + colors.get("reset"));
                         } else {
-                            System.out.println("RIGHT ANSWER!!!");
                             player2.score++;
-                            System.out.println("SCORE: ", player2.score);
-                            System.out.println("---------------------");
+                            System.out.println("SCORE: " + player2.score + colors.get("reset"));
                         }
+                        System.out.println(colors.get("cyan")+"---------------------" + colors.get("reset"));
                         movieBlankData.remove(currentBlankIndex);
                         currentBlankIndex = movieBlankData.isEmpty() ? -1 : min(movieBlankData.keySet());
                     } else {
-                        System.out.println("OOPS!!! WRONG ANSWER");
+                        System.out.println(colors.get("red") + "OOPS!!! WRONG ANSWER");
                         gameLifes.chances--;
-                        System.out.println("LIFES LEFT: ", gameLifes.chances);
+                        System.out.println("CHANCES LEFT: " + gameLifes.chances + colors.get("reset"));
                     }
                     isPlayer1Turn = !isPlayer1Turn;
-                }else{
-                    System.out.println("Not a valid Input");
+                } else {
+                    System.out.println(colors.get("red") + "Not a valid Input" + colors.get("reset"));
                 }
             } while (gameLifes.chances > 0 && !movieBlankData.isEmpty());
-            System.out.println("Movie: " + movie.movieName);
+            System.out.println("Movie: " + movie.movieName );
         } catch (Exception e) {
-            System.out.println(e.getMessage());
-            System.out.println("Unexpected Error Occurred, Restart the game");
+            System.out.println(colors.get("red") + "Unexpected Error Occurred, Restart the game" + colors.get("reset"));
         }
-        System.out.println("---------------------");
-        System.out.println("GAME OVER!!!");
-        System.out.println("---------------------");
+        System.out.println(colors.get("blue") + "======== GAME OVER!! ========");
         System.out.println("Player 1 score: " + player1.score);
         System.out.println("Player 2 score: " + player2.score);
-        System.out.println("---------------------");
+        System.out.println("=============================" + colors.get("reset"));
     }
 }
 class Movie {
@@ -234,7 +238,7 @@ class Player {
     public int score = 0;
 }
 class ChatGPTAPI {
-    private final String API_KEY = "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";
+    private final String API_KEY = "";
     private final HttpClient httpClient;
     public ChatGPTAPI() {
         this.httpClient = HttpClient.newHttpClient();
